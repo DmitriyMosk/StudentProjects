@@ -253,7 +253,7 @@ int main()
 {
     MT_Init();
     MT_WriteWord(); 
-    MT_HandlerW3();
+    //MT_HandlerW3();
 
     printf("\nOutput: \n");
     for (int i = 0; i<N_ARRAY; i++) 
