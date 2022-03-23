@@ -247,7 +247,62 @@ char cache_input[80];
         }
     }
     
+    void MT_HandlerW2() 
+    { 
+        state = 1; 
 
+        while ( state != 0 ) 
+        {
+            switch (state)
+            {
+                case 1:
+                    switch ( MT_CurData() )
+                    {
+                        case '#':
+                            MT_ReWrite('#'); state = 0;
+                            break;
+                        case '1':
+                            MT_ReWrite('#'); state = 2; 
+                            MT_Left();
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch ( MT_CurData() )
+                    {
+                        case '#':
+                            MT_ReWrite('1'); state = 0;
+                            break;
+                        case '1':
+                            MT_ReWrite('#'); state = 3; 
+                            MT_Left();
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case 3:
+                    switch ( MT_CurData() )
+                    {
+                        case '#':
+                            MT_ReWrite('1'); state = 2;
+                            MT_Left();
+                            break;
+                        case '1':
+                            MT_ReWrite('#'); state = 1; 
+                            MT_Left();
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    } 
 // 
 int main() 
 {
