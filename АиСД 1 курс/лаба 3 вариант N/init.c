@@ -8,10 +8,13 @@ int *GenRandIntArray(int size, int upper, int lower) {
     
     int *arr = malloc(size * sizeof(int));     
     
-    srand(time(0)); 
-    
     for ( int i = 0; i < size; i++ ) 
+    {   
+        int seed = i + time(0) + ( ( arr[i] != 0 ) ? arr[i] << 2 : 10);
+        srand(seed); 
         arr[i] = rand() % ( upper - lower + 1 ) + lower; 
+    }
+        
 
     return arr;
 }
@@ -42,6 +45,7 @@ void PrintArray(int *arr, int size)
 } 
 ///////////////////////////////////////////////////////////////////////////
 
+int count_iter = 0; 
 
 int BinarySearch(int *arr, int size, int searchElement)
 { 
@@ -60,6 +64,7 @@ int BinarySearch(int *arr, int size, int searchElement)
             low = middle + 1; 
         }
         else return middle; 
+        count_iter++;
     }
 
     return -1;
@@ -87,7 +92,35 @@ int PredictionSearch(int *arr, int size, int searchElement)
     return predictIndex; 
 }
 
+//////////////////////////////////////////////////////////////////////////////////
 
+int TestMode(int size, char method) 
+{ 
+    srand(count_iter);
+
+    int *arr = GenRandIntArray(size, 100, 10); 
+    SortArray(arr, size);
+
+    int randSearchElement = arr[rand() % ( size - 0 )]; 
+
+    int idx; 
+    if ( method == 'p' ) 
+    { 
+        idx = PredictionSearch(arr, size, randSearchElement);
+    }
+    else 
+    { 
+        idx = BinarySearch(arr, size, randSearchElement);
+    }
+
+    if ( idx == -1 ) 
+    { 
+        printf("Search output: nil element %i\n", randSearchElement);
+        PrintArray(arr, size); 
+    }
+        
+        
+}
 
 int main() 
 { 
@@ -100,30 +133,44 @@ int main()
     PrintArray(arr, N); 
     //////////////////////////////////////
     
-    int search; 
-    printf("Insert search value: "); scanf("%i", &search); 
+    int IsTestMode; 
+    printf("Enable test mode? 1/0 (Y/N): "); scanf("%i", &IsTestMode); 
 
     char searchMethod; 
     printf("Insert b/p to select the search method(b - Binary, p - prediction): "); scanf(" %c", &searchMethod); 
 
+    if ( IsTestMode == 1 ) 
+    { 
+    
+        for ( int k = 0; k <= 10; k++) 
+        {    
+            TestMode(N, searchMethod);
+        }
 
-
-    int idx = -1; 
-    switch (searchMethod)
-    {
-    case 'b':
-        idx = BinarySearch(arr, N, search); 
-        break;
-    case 'p':
-        idx = PredictionSearch(arr, N, search);
-        break;
-    default:
-        printf("\nUnknown search method.\n");
-        break;
+        printf("Count iteration: %i",count_iter);
     }
+    else 
+    { 
+        int search; 
+        printf("Insert search value: "); scanf("%i", &search); 
 
-    if ( idx != -1 ) 
-        printf("Search output: element index %i", idx);
-    else    
-        printf("Search output: nil element");
+        int idx = -1; 
+        switch (searchMethod)
+        {
+        case 'b':
+            idx = BinarySearch(arr, N, search); 
+            break;
+        case 'p':
+            idx = PredictionSearch(arr, N, search);
+            break;
+        default:
+            printf("\nUnknown search method.\n");
+            break;
+        }
+
+        if ( idx != -1 ) 
+            printf("Search output: element index %i", idx);
+        else    
+            printf("Search output: nil element");
+    }
 } 
