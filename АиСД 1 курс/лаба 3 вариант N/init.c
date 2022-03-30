@@ -1,6 +1,7 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <time.h> 
+#include <math.h> 
 
 ///////////////////////////////////////////////////////////////////////////
 int *GenRandIntArray(int size, int upper, int lower) { 
@@ -64,6 +65,27 @@ int BinarySearch(int *arr, int size, int searchElement)
     return -1;
 } 
 
+int PredictionSearch(int *arr, int size, int searchElement) 
+{   
+    int min = arr[0]; int max = arr[size-1]; 
+    
+    int predictIndex = (searchElement - min)*(size-1)/(max-min); 
+    
+    if ( arr[predictIndex] != searchElement ) 
+    { 
+        if ( arr[predictIndex - 1] == searchElement ) 
+        { 
+            predictIndex -= 1;
+        }  
+        else if ( arr[predictIndex + 1] == searchElement ) 
+        { 
+            predictIndex += 1;
+        }
+        else predictIndex = -1;
+    } 
+
+    return predictIndex; 
+}
 
 
 
@@ -80,16 +102,28 @@ int main()
     
     int search; 
     printf("Insert search value: "); scanf("%i", &search); 
-    
-    int idx = BinarySearch(arr, N, search); 
-    
-    if ( idx != -1 ) 
-    { 
-        printf("Search output: element index %i", idx);
-    } 
-    else 
-    { 
-        printf("Search output: nil element");
+
+    char searchMethod; 
+    printf("Insert b/p to select the search method(b - Binary, p - prediction): "); scanf(" %c", &searchMethod); 
+
+
+
+    int idx = -1; 
+    switch (searchMethod)
+    {
+    case 'b':
+        idx = BinarySearch(arr, N, search); 
+        break;
+    case 'p':
+        idx = PredictionSearch(arr, N, search);
+        break;
+    default:
+        printf("\nUnknown search method.\n");
+        break;
     }
-    
+
+    if ( idx != -1 ) 
+        printf("Search output: element index %i", idx);
+    else    
+        printf("Search output: nil element");
 } 
