@@ -92,6 +92,41 @@ int PredictionSearch(int *arr, int size, int searchElement)
     return predictIndex; 
 }
 
+
+/*
+For Ferma test
+*/
+int Evklid(int a, int b){
+	if(b==0)
+		return a;
+	return Evklid(b, a%b);
+}
+
+long int pow_fast(int a, int b) 
+{
+    long int out = 1;     
+    while(b > 0) 
+    { 
+        if ( b % 2 == 1 ) 
+            out *= a; 
+        out *= out; 
+        b /= 2; 
+    }
+    return out; 
+} 
+
+int TestFerma(int n) 
+{ 
+    if ( n == 2 ) return 1; 
+    srand(time(NULL));
+    for ( int i = 1; i <= 100; i++) 
+    {   
+        int a = (rand() % (n - 2)) + 2;
+        if ( ( Evklid(a, n) != 1 ) && ( pow_fast(a, n-1) != 1 ) )
+            return 0; 
+    }
+    return 1; 
+}
 //////////////////////////////////////////////////////////////////////////////////
 
 int TestMode(int size, char method) 
@@ -122,11 +157,14 @@ int TestMode(int size, char method)
         
 }
 
+////////////////////////////////////////////////////////////////////////////////////
+
 int main() 
 { 
     int N; 
     printf("Insert number N: "); scanf("%i",&N); 
-    
+
+/*
     int *arr = GenRandIntArray(N, 100, 10); 
     //PrintArray(arr, N);
     SortArray(arr, N);
@@ -172,5 +210,14 @@ int main()
             printf("Search output: element index %i", idx);
         else    
             printf("Search output: nil element");
+    }
+*/
+    if ( TestFerma(N) == 1 ) 
+    { 
+        printf("Number %i is prime\n", N); 
+    }
+    else 
+    { 
+        printf("Number %i isn`t prime\n", N);
     }
 } 
