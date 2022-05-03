@@ -134,15 +134,58 @@ void Work3()
 { 
     int inf = 2147483647;
     int arr[Work3_ArrLen][Work3_ArrLen] = { 
-       //A     B    C    D    E    F
-        {0,   450, inf, 350, 180, 300}, // A
-        {450, 0,   500, 250, 400, 280}, // B
-        {inf, 500, 0,   270, 360, 300}, // C
-        {350, 250, 270, 0,   450, inf}, // D
-        {180, 400, 360, 450, 0,   370}, // E
-        {300, 280, 300, inf, 370, 0  }, // F
+       //A      B      C      D      E     F
+        {inf,   450,   inf,   350,   180,  300}, // A
+        {450,   inf,   500,   250,   400,  280}, // B
+        {inf,   500,   inf,   270,   360,  300}, // C
+        {350,   250,   270,   inf,   450,  inf}, // D
+        {180,   400,   360,   450,   inf,  370}, // E
+        {300,   280,   300,   inf,   370,  inf}, // F
     };
+    int P_arr[Work3_ArrLen]; 
+    
+    char idx_v_to_word[Work3_ArrLen] = { 'A', 'B', 'C', 'D', 'E', 'F' }; 
+    
+    int sum = 0; 
+    
+    int finish = 5; 
+    int start = 0; 
+    
+    
+    int cur_point = start; 
+    P_arr[cur_point] = 1; 
+    
+    while ( 1 ) 
+    { 
+        int next_point; 
+        int min = inf; 
+        
+        printf("(%c,",idx_v_to_word[cur_point]);
+        for ( int i = 0; i < Work3_ArrLen; i++ ) 
+        { 
+            if ( P_arr[i] != 1 &&  arr[cur_point][i] < min )
+            { 
+                min = arr[cur_point][i]; 
+                next_point = i; 
+            } 
+        } 
 
+        printf("%c) = %i\n", idx_v_to_word[next_point], min); 
+        
+        P_arr[next_point] = 1; 
+        
+        cur_point = next_point; 
+        sum += min; 
+        
+        if ( next_point == finish )
+        {   
+            printf("(%c,%c) = %i\n",idx_v_to_word[cur_point], idx_v_to_word[start], arr[cur_point][start] );
+            sum += arr[cur_point][start]; 
+            break; 
+        } 
+    } 
+    
+    printf("Min price length: %i\n", sum); 
 }
 
 void Work4() 
@@ -190,6 +233,6 @@ void Work4()
 
 int main()
 { 
-    Work4();
+    Work3();
 
 } 
